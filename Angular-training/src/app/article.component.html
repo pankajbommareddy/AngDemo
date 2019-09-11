@@ -1,0 +1,66 @@
+
+<h3 *ngIf="articleIdToUpdate; else create"> 
+   Update Article for Id: {{articleIdToUpdate}}
+</h3>
+<ng-template #create>
+   <h3> Create New User </h3>
+</ng-template>
+<div>
+
+
+  
+ <form [formGroup]="articleForm" (ngSubmit)="onArticleFormSubmit()">
+    <table>
+       
+      <tr><td>  Enter User Name</td><td><input formControlName="authorName">
+    <label *ngIf="articleForm.get('authorName').invalid && processValidation" [ngClass] = "'error'"> Author Name is required. </label>
+  </td></tr>	
+ 
+
+
+        <tr><td colspan="2">
+          <button *ngIf="!articleIdToUpdate">CREATE</button>  
+        <button *ngIf="articleIdToUpdate">UPDATE</button>  
+          <button (click)="backToCreateArticle()" *ngIf="articleIdToUpdate">Go Back</button>  
+      </td></tr>
+      </table>
+  
+
+
+
+
+ 
+
+
+ </form> 
+ <br/>
+ <div *ngIf="statusCode; else processing">
+   <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+	    User added successfully.
+   </div>   
+   <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+       User already exists.
+   </div>   	
+   <div *ngIf="statusCode === 200" [ngClass] = "'success'">
+        User updated successfully.
+   </div>   	      
+   <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+        User deleted successfully.
+   </div>   	   
+   <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+        Internal Server Error.
+   </div>   	
+ </div>
+ <ng-template #processing>
+	<img *ngIf="requestProcessing" src="assets/images/loading.gif">
+ </ng-template>
+</div>
+<h3>User Details</h3>
+<table>
+  <tr><th> Id</th> <th>User Name</th></tr>
+  <tr *ngFor="let article of allArticles" >
+    <td>{{article.articleId}}</td> <td>{{article.authorName}}</td> 
+	<td><button type="button" (click)="loadArticleToEdit(article.articleId)">Edit</button> </td> 
+	<td><button type="button" (click)="deleteArticle(article.articleId)">Delete</button></td>
+  </tr>
+</table>
